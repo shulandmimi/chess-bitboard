@@ -114,7 +114,6 @@ enum Color {
 const FEN_START = 'RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr';
 
 class ChessPosition {
-    player: Color = Color.white;
     piece_in_square: number[] = new Array(64);
 
     mask: BitBoard[] = new Array(64);
@@ -153,7 +152,6 @@ class ChessPosition {
         for (let i = 0; i < this.mask.length; i++) {
             switch (this.piece_in_square[i]) {
                 case -Pieces.ROOK: {
-                    // this.rooks_queens.or(this.mask) |= this.mask[i];
                     this.rooks_queens.assign(this.rooks_queens.or(this.mask[i]));
                     this.white_pieces.assign(this.white_pieces.or(this.mask[i]));
                     this.white_queens.assign(this.white_queens.or(this.mask[i]));
@@ -161,11 +159,12 @@ class ChessPosition {
                 }
 
                 case Pieces.PAWN: {
-                    // this.black_pawns.assign(this.);
                     // @ts-ignore
-                    this.black_pawns.assign(this.black_pawns << this.mask[i]);
+                    this.black_pawns.assign(this.black_pawns | this.mask[i]);
                     // @ts-ignore
-                    this.black_pieces.assign(this.black_pieces << this.mask[i]);
+                    this.black_pieces.assign(this.black_pieces | this.mask[i]);
+
+                    break;
                 }
             }
         }
@@ -190,10 +189,9 @@ class ChessPosition {
                 [this.white_queens, Pieces.QUEEN],
                 [this.white_rooks, Pieces.ROOK],
             ] as const;
-            const option = options.find(([bitboard, piece]) => {
-                console.log(bitboard.toString(), offset.toString(2).padStart(64, '0'), bitboard.and(offset), Boolean(bitboard.and(offset)));
-                return Boolean(bitboard.and(offset));
-            });
+
+            const option = options.find(([bitboard, piece]) => Boolean(bitboard.and(offset)));
+
             if (option) {
                 const [bitboard, piece] = option;
                 if (this.white_pieces.and(bitboard)) return -piece;
@@ -206,7 +204,16 @@ class ChessPosition {
     }
 }
 
+type Square = number;
+
+const SQUARE_MAP = {
+    a8: 0,
+    a7: 9,
+    a1: 56,
+};
+
 class Chess {
+    player: Color = Color.white;
     position!: ChessPosition;
 
     constructor(fen: string = FEN_START) {
@@ -240,7 +247,16 @@ class Chess {
         this.position = new ChessPosition(pieces);
     }
 
-    move() {}
+    move({ from, to }: { from: Square; to: Square }) {
+        const white = !(this.player & Color.black);
+
+        const [from_board, to_board] = [
+            white ? this.position.white_pieces : this.position.black_pieces,
+            !white ? this.position.black_pieces : this.position.white_pieces,
+        ];
+
+        // from_board.and(this.position.mask[from]);
+    }
 
     ascii() {
         const board: string[][] = [];
@@ -252,7 +268,7 @@ class Chess {
 
             // @ts-ignore
             let piece_str: string = piece !== null ? PIECE_ENUM_MAP_STR[Math.abs(piece)] : '';
-            if (piece !== null && piece >= 0) piece_str.toLocaleUpperCase();
+            if (piece !== null && piece >= 0) piece_str = piece_str.toLocaleUpperCase();
 
             board[board.length - 1].push(piece ? piece_str : '-');
         }
@@ -266,5 +282,7 @@ const chess = new Chess();
 // chess.load_fen();
 
 // chess.load_fen('8/8/8/8/8/8/p7/rnbqkbnr');
-console.log(chess);
 console.log(chess.ascii());
+console.log(chess.position.black_pieces);
+chess.move({ from: SQUARE_MAP.a1, to: SQUARE_MAP.a7 });
+// console.log(chess.position.mask, chess.position.mask.length);
