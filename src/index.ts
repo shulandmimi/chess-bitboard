@@ -254,8 +254,6 @@ class Chess {
             white ? this.position.white_pieces : this.position.black_pieces,
             !white ? this.position.black_pieces : this.position.white_pieces,
         ];
-
-        // from_board.and(this.position.mask[from]);
     }
 
     ascii() {
