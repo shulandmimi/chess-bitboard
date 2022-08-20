@@ -36,11 +36,8 @@ export class Chess {
             for (let j = 0; j < row.length; j++) {
                 if (row[j] >= '0' && row[j] <= '8') {
                     j += Number(row[j]);
-                    // @ts-ignore
                 } else if (PIECE_STR_MAP_ENUM[row[j]]) {
                     const piece = row[j];
-                    // @ts-ignore
-                    // @ts-ignore
                     pieces[i * 8 + j] = PIECE_STR_MAP_ENUM[piece];
                 }
             }
@@ -54,6 +51,7 @@ export class Chess {
 
         // 获取需要移动的棋子
         const piece = this.position.piece_at(from);
+
         if (!piece) return null;
 
         // 获取移动方局面和相反阵营的局面
@@ -91,12 +89,11 @@ export class Chess {
             }
             const piece = this.position.piece_at(i);
 
-            // @ts-ignore
             let piece_str: string = piece !== null ? PIECE_ENUM_MAP_STR[piece] : '';
 
             board[board.length - 1].push(piece ? piece_str : '-');
         }
 
-        return board.map(row => row.map(item => item.padStart(4, ' ')).join('')).join('\n');
+        return board.map((row) => row.map((item) => item.padStart(4, ' ')).join('')).join('\n');
     }
 }

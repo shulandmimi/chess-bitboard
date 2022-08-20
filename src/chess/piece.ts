@@ -7,7 +7,7 @@ export enum Pieces {
     KING,
 }
 
-export const PIECE_STR_MAP_ENUM = {
+export const PIECE_STR_MAP_ENUM: Record<string, Pieces> = {
     p: Pieces.PAWN,
     r: Pieces.ROOK,
     n: Pieces.KNIGHT,
@@ -22,7 +22,7 @@ export const PIECE_STR_MAP_ENUM = {
     K: -Pieces.KING,
 };
 
-export const PIECE_ENUM_MAP_STR = {
+export const PIECE_ENUM_MAP_STR: Record<Pieces | number, string> = {
     [Pieces.PAWN]: 'p',
     [Pieces.ROOK]: 'r',
     [Pieces.KNIGHT]: 'n',
