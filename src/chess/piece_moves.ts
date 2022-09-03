@@ -11,6 +11,21 @@ export function piece_moves(piece: Pieces, position: number, size: number, callb
     switch (piece) {
         case Pieces.QUEEN:
         case Pieces.BISHOP: {
+            let [x, y] = [file(position), rank(position)];
+
+            for (let i = x + 1, j = y + 1; i <= 7 && j <= 7; i++, j++) {
+                callback(position, i * 8 + j - position);
+            }
+            for (let i = x + 1, j = y - 1; i <= 7 && j >= 0; i++, j--) {
+                callback(position, i * 8 + j - position);
+            }
+            for (let i = x - 1, j = y + 1; i >= 0 && j <= 7; i--, j++) {
+                callback(position, i * 8 + j - position);
+            }
+            for (let i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--) {
+                callback(position, i * 8 + j - position);
+            }
+
             if (piece === Pieces.BISHOP) break;
         }
         case Pieces.ROOK: {
@@ -18,14 +33,14 @@ export function piece_moves(piece: Pieces, position: number, size: number, callb
                 end = start + row;
             for (let i = start; i < end; i++) {
                 if (i === position) continue;
-                callback(position, i);
+                callback(position, i - position);
             }
 
             start = rank(position);
             end = size;
             for (let i = start; i < size; i += row) {
                 if (i === position) continue;
-                callback(position, i);
+                callback(position, i - position);
             }
             break;
         }
@@ -61,7 +76,7 @@ export function piece_moves(piece: Pieces, position: number, size: number, callb
 }
 
 export function genernal_attack_map_static() {
-    return [Pieces.ROOK, Pieces.KNIGHT, Pieces.KING].reduce((result, piece) => {
+    return [Pieces.ROOK, Pieces.KNIGHT, Pieces.KING, Pieces.BISHOP, Pieces.QUEEN].reduce((result, piece) => {
         const piece_map = new Array(size).fill(0n);
         for (let i = 0; i < size; i++) {
             piece_moves(piece, i, size, (position, offset) => {
