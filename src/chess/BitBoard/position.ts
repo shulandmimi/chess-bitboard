@@ -37,12 +37,19 @@ export class ChessPosition {
         this.reset_by_piece_in_square();
     }
 
+    /**
+     * 重置棋盘
+     * @todo 补充清除的数据
+     */
     reset() {
         for (let i = 0; i < 64; i++) {
             this.mask[i] = new BitBoard(1n << BigInt(i));
         }
     }
 
+    /**
+     * 从 square 恢复棋盘
+     */
     reset_by_piece_in_square() {
         for (let i = 0; i < this.mask.length; i++) {
             this.relation_ship_of_piece(this.piece_in_square[i]).forEach((item) => {
@@ -51,7 +58,12 @@ export class ChessPosition {
         }
     }
 
-    piece_at(idx: number) {
+    /**
+     * 获取棋盘上棋子的类型
+     * @param idx
+     * @returns
+     */
+    piece_at(idx: number): Pieces | null {
         // @ts-ignore
         const pieces: bigint = new BitBoard(this.black_pieces | this.white_pieces);
         const offset = 1n << BigInt(idx);
@@ -86,6 +98,11 @@ export class ChessPosition {
         return null;
     }
 
+    /**
+     * 从棋盘中删除该棋子
+     * @param piece
+     * @param offset
+     */
     remove_piece(piece: Pieces, offset: number) {
         const target = 1n << BigInt(offset);
 
@@ -101,6 +118,9 @@ export class ChessPosition {
         });
     }
 
+    /**
+     * 与棋子有关系的 bitboard
+     */
     relation_ship_of_piece(piece: Pieces) {
         switch (piece) {
             case -Pieces.ROOK:
