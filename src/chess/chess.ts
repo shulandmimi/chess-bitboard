@@ -2,7 +2,7 @@ import { genernal_attack_map_static } from './piece_moves';
 import { ChessPosition, Color } from './BitBoard/position';
 import { Pieces, PIECE_ENUM_MAP_STR, PIECE_STR_MAP_ENUM } from './piece';
 
-const attack_map_static = genernal_attack_map_static();
+export const attack_map_static = genernal_attack_map_static();
 
 export type Square = keyof typeof SQUARE_MAP;
 
