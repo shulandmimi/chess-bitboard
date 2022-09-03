@@ -73,12 +73,12 @@ export class Chess {
         if (can_capture) {
             const to_piece = this.position.piece_at(to)!;
             // 在可吃子的情况下，删除敌方棋子
-            this.position.removePiece(to_piece, to);
+            this.position.remove_piece(to_piece, to);
         }
 
         // 添加我方棋子到目的地
-        this.position.removePiece(piece, from);
-        this.position.addPiece(piece, to);
+        this.position.remove_piece(piece, from);
+        this.position.add_piece(piece, to);
     }
 
     ascii() {
@@ -94,6 +94,11 @@ export class Chess {
             board[board.length - 1].push(piece ? piece_str : '-');
         }
 
-        return board.map((row) => row.map((item) => item.padStart(4, ' ')).join('')).join('\n');
+        return [
+            board.map((row) => row.map((item) => item.padStart(4, ' ')).join('')).join('\n'),
+            '',
+            `   bit board: ${this.position.black_pieces.or(this.position.white_pieces)}`,
+            '',
+        ].join('\n');
     }
 }

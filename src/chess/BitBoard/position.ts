@@ -13,23 +13,23 @@ export class ChessPosition {
 
     mask: BitBoard[] = new Array(64);
 
+    // white
     white_pawns = new BitBoard();
-    black_pawns = new BitBoard();
-    white_knights = new BitBoard();
-    black_knights = new BitBoard();
-    bishops_queens = new BitBoard();
-    rooks_queens = new BitBoard();
-    white_bishops = new BitBoard();
-    black_bishops = new BitBoard();
     white_rooks = new BitBoard();
-    black_rooks = new BitBoard();
+    white_knights = new BitBoard();
+    white_bishops = new BitBoard();
     white_queens = new BitBoard();
-    black_queens = new BitBoard();
+    white_kings = new BitBoard();
     white_pieces = new BitBoard();
+
+    // black
+    black_pawns = new BitBoard();
+    black_knights = new BitBoard();
+    black_bishops = new BitBoard();
+    black_rooks = new BitBoard();
+    black_queens = new BitBoard();
+    black_kings = new BitBoard();
     black_pieces = new BitBoard();
-    rotate90 = new BitBoard();
-    rotate45 = new BitBoard();
-    rotate315 = new BitBoard();
 
     constructor(piece_in_square: number[]) {
         this.piece_in_square = piece_in_square;
@@ -45,7 +45,7 @@ export class ChessPosition {
 
     reset_by_piece_in_square() {
         for (let i = 0; i < this.mask.length; i++) {
-            this.relation_ship_of_piece(this.piece_in_square[i]).forEach(item => {
+            this.relation_ship_of_piece(this.piece_in_square[i]).forEach((item) => {
                 item.assign(item.or(this.mask[i]));
             });
         }
@@ -86,17 +86,17 @@ export class ChessPosition {
         return null;
     }
 
-    removePiece(piece: Pieces, offset: number) {
+    remove_piece(piece: Pieces, offset: number) {
         const target = 1n << BigInt(offset);
 
-        this.relation_ship_of_piece(piece).forEach(item => {
+        this.relation_ship_of_piece(piece).forEach((item) => {
             item.assign(item.xor(target));
         });
     }
 
-    addPiece(piece: Pieces, offset: number) {
+    add_piece(piece: Pieces, offset: number) {
         const target = 1n << BigInt(offset);
-        this.relation_ship_of_piece(piece).forEach(item => {
+        this.relation_ship_of_piece(piece).forEach((item) => {
             item.assign(item.xor(target));
         });
     }
@@ -104,11 +104,11 @@ export class ChessPosition {
     relation_ship_of_piece(piece: Pieces) {
         switch (piece) {
             case -Pieces.ROOK:
-                return [this.white_pieces, this.white_rooks, this.rooks_queens];
+                return [this.white_pieces, this.white_rooks];
             case -Pieces.PAWN:
                 return [this.white_pawns, this.white_pieces];
             case -Pieces.QUEEN:
-                return [this.white_queens, this.rooks_queens, this.bishops_queens, this.white_pieces];
+                return [this.white_queens, this.white_pieces];
             case -Pieces.KNIGHT:
                 return [this.white_knights, this.white_pieces];
             case -Pieces.KING:
