@@ -30,26 +30,38 @@ export function piece_moves(piece: Pieces, position: number, size: number, callb
             break;
         }
         case Pieces.KNIGHT: {
-            const null_board = 1n << BigInt(position);
+            const cur_board = 1n << BigInt(position);
 
-            if ((null_board >> 17n) & board_h) callback(position, -17);
-            if ((null_board >> 15n) & board_a) callback(position, -15);
-            if ((null_board >> 10n) & board_hg) callback(position, -10);
-            if ((null_board >> 6n) & board_ab) callback(position, -6);
+            if ((cur_board >> 17n) & board_h) callback(position, -17);
+            if ((cur_board >> 15n) & board_a) callback(position, -15);
+            if ((cur_board >> 10n) & board_hg) callback(position, -10);
+            if ((cur_board >> 6n) & board_ab) callback(position, -6);
 
-            if ((null_board << 17n) & board_a) callback(position, 17);
-            if ((null_board << 15n) & board_h) callback(position, 15);
-            if ((null_board << 10n) & board_ab) callback(position, 10);
-            if ((null_board << 6n) & board_hg) callback(position, 6);
+            if ((cur_board << 17n) & board_a) callback(position, 17);
+            if ((cur_board << 15n) & board_h) callback(position, 15);
+            if ((cur_board << 10n) & board_ab) callback(position, 10);
+            if ((cur_board << 6n) & board_hg) callback(position, 6);
         }
-        case Pieces.PAWN:
+        // case Pieces.PAWN: {
+        // const null_board = 1n << BigInt(position);
+        // }
         case Pieces.KING: {
+            const cur_board = 1n << BigInt(position);
+            if ((cur_board >> 1n) & board_h) callback(position, -1);
+            if ((cur_board >> 7n) & board_a) callback(position, -7);
+            callback(position, -8);
+            if ((cur_board >> 9n) & board_h) callback(position, -9);
+
+            if ((cur_board << 1n) & board_a) callback(position, 1);
+            if ((cur_board << 7n) & board_h) callback(position, 7);
+            callback(position, 8);
+            if ((cur_board << 9n) & board_a) callback(position, 9);
         }
     }
 }
 
 export function genernal_attack_map_static() {
-    return [Pieces.ROOK, Pieces.KNIGHT].reduce((result, piece) => {
+    return [Pieces.ROOK, Pieces.KNIGHT, Pieces.KING].reduce((result, piece) => {
         const piece_map = new Array(size).fill(0n);
         for (let i = 0; i < size; i++) {
             piece_moves(piece, i, size, (position, offset) => {
