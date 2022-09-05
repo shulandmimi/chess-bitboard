@@ -1,4 +1,4 @@
-import { attack_map_static, Chess } from './chess/chess';
+import { attack_map_static, Chess, SQUARE_MAP, SQUARE_INDEX_MAP } from './chess/chess';
 import { Pieces } from './chess/piece';
 import { bitboard_gui_board, simple_view_board } from './utils/bitboard_gui_board';
 import bit_counts from './chess/utils/bit_counts';
@@ -17,7 +17,7 @@ console.log(chess.ascii());
 // console.log();
 const board = attack_map_static[Pieces.KING][28];
 console.log(bitboard_gui_board(board, simple_view_board));
-console.log(bit_counts(board));
+console.log(SQUARE_INDEX_MAP[last_significant(board)]);
 console.log(last_significant(board));
 
 
